@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import "./App.css";
+import { useState, useRef, useEffect } from "react";
 
-export default function App() {
-  const [activeTab, setActiveTab] = useState("Gurugram");
+const cityNames = ["Gurugram", "Delhi", "Noida"];
 
-  const tabs = ["Gurugram", "Delhi", "Noida"];
-
+function App() {
   const data = {
     Gurugram: [
       { name: "Saloon In Gurugram", link: "#" },
@@ -91,38 +90,83 @@ export default function App() {
     Noida: [{ name: "Coming soon...", link: "#" }],
   };
 
+  const [count, setCount] = useState(0);
+  const [selectedCity, setSelectedCity] = useState("Gurugram");
+  const containerRef = useRef(null);
+  const [highlightStyle, setHighlightStyle] = useState({});
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const cityDivs = containerRef.current.querySelectorAll(".city-wrapper");
+    const index = cityNames.indexOf(selectedCity);
+    const selectedDiv = cityDivs[index];
+
+    if (selectedDiv) {
+      setHighlightStyle({
+        width: selectedDiv.offsetWidth,
+        left: selectedDiv.offsetLeft,
+        top: selectedDiv.offsetTop,
+        height: selectedDiv.offsetHeight,
+      });
+    }
+  }, [selectedCity]);
+
   return (
-    <div className="p-6 font-sans">
-      {/* Tabs */}
-      <div className="flex gap-3 mb-6">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-5 py-2 rounded-full border transition ${
-              activeTab === tab
-                ? "bg-black text-white"
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
+    <div className="font-montserrat m-6">
+      <h1 className="text-black text-6xl font-bold leading-[75px] mb-8">
+        POPULAR SEARCHES
+      </h1>
+
+      <div
+        className="relative px-1 py-[3px] bg-gray-200 rounded-3xl inline-flex justify-start items-center gap-2.5 select-none"
+        ref={containerRef}
+      >
+        <div
+          className="absolute bg-black rounded-[50px] transition-all duration-300 ease-in-out"
+          style={{
+            width: highlightStyle.width,
+            height: highlightStyle.height,
+            left: highlightStyle.left,
+            top: highlightStyle.top,
+          }}
+        />
+
+        {cityNames.map((city) => {
+          const isSelected = city === selectedCity;
+          return (
+            <div
+              key={city}
+              className="city-wrapper px-4 py-2 rounded-[50px] flex justify-center items-center gap-2.5 cursor-pointer relative z-10"
+              onClick={() => setSelectedCity(city)}
+            >
+              <div
+                className={`justify-start font-['Poppins'] ${
+                  isSelected
+                    ? "text-white text-sm font-normal leading-none"
+                    : "text-neutral-600 text-base font-medium leading-tight"
+                }`}
+              >
+                {city}
+              </div>
+            </div>
+          );
+        })}
       </div>
 
-      <div className="bg-white inline-flex pt-[29px] pr-[105px] pb-0 pl-[20px] items-start gap-[134px]">
-        <div className="grid grid-cols-3 gap-x-10 gap-y-3">
-          {data[activeTab].map((item, index) => (
-            <a
-              href={item.link}
-              key={index}
-              className="text-gray-800 hover:text-blue-500 cursor-pointer"
-            >
-              {item.name}
-            </a>
-          ))}
-        </div>
+      <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-xl">
+        {data[selectedCity].map((item, index) => (
+          <a
+            key={index}
+            href={item.link}
+            className="block px-4 py-3 rounded-lg bg-white text-[#121212] font-poppins text-sm leading-[150%] hover:bg-gray-100 transition"
+            style={{ textDecoration: "none" }}
+          >
+            {item.name}
+          </a>
+        ))}
       </div>
     </div>
   );
 }
+
+export default App;
