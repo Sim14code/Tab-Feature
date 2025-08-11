@@ -202,7 +202,7 @@ function App() {
         })}
       </div>
 
-      <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-xl">
+      <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-white shadow-2xl rounded-xl">
         {data[selectedCity].map((item, index) => (
           <a
             key={index}
