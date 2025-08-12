@@ -182,8 +182,8 @@ function App() {
   }, [selectedCity]);
 
   return (
-    <div className="font-montserrat m-6">
-      <h1 className="text-black text-6xl font-bold leading-[75px] mb-8">
+    <div className="font-montserrat m-3 sm:m-6">
+      <h1 className="text-black text-3xl sm:text-4xl lg:text-6xl font-bold leading-tight sm:leading-[75px] mb-6 sm:mb-8">
         POPULAR SEARCHES
       </h1>
 
@@ -223,18 +223,65 @@ function App() {
         })}
       </div>
 
-      <div className="mt-6 grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-3 gap-3 p-4 bg-white shadow-2xl rounded-xl  sm:w-[45rem] lg:w-full">
-        {data[selectedCity].map((item, index) => (
-          <a
-            key={index}
-            href={item.link}
-            className="block px-4 py-3 rounded-lg bg-white text-[#121212] font-poppins text-sm leading-[150%] hover:bg-gray-100 transition"
-            style={{ textDecoration: "none" }}
-          >
-            {item.name}
-          </a>
-        ))}
+      {/* Desktop Grid */}
+      <div className="hidden lg:block mt-6">
+        <div className="grid grid-cols-3 gap-3 p-4 bg-white shadow-2xl rounded-xl">
+          {data[selectedCity].map((item, index) => (
+            <a
+              key={index}
+              href={item.link}
+              className="block px-4 py-3 rounded-lg bg-white text-[#121212] font-poppins text-sm leading-[150%] hover:bg-gray-100 transition"
+              style={{ textDecoration: "none" }}
+            >
+              {item.name}
+            </a>
+          ))}
+        </div>
       </div>
+
+      {/* Mobile/Tablet - Columns with Horizontal Scroll */}
+      <div className="block lg:hidden mt-6">
+        <div className="overflow-x-auto scrollbar-hide">
+          <div
+            className="p-4 bg-white shadow-2xl rounded-xl"
+            style={{ width: "max-content" }}
+          >
+            <div
+              className="grid grid-rows-[repeat(17,1fr)] grid-flow-col gap-3"
+              style={{ gridTemplateRows: "repeat(17, minmax(0, 1fr))" }}
+            >
+              {data[selectedCity].map((item, index) => (
+                <a
+                  key={index}
+                  href={item.link}
+                  className="block px-4 py-3 rounded-lg bg-white text-[#121212] font-poppins text-sm leading-[150%] hover:bg-gray-100 transition whitespace-nowrap"
+                  style={{
+                    textDecoration: "none",
+                    width: "280px",
+                  }}
+                >
+                  {item.name}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="text-center mt-2 text-sm text-gray-500">
+          ← Scroll horizontally to see more columns →
+        </div>
+      </div>
+
+      <style jsx>{`
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </div>
   );
 }
